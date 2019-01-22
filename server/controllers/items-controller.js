@@ -17,7 +17,6 @@ itemController.getOneItem = (req, res, next) => {
     if (err) res.send(err).end();
     else {
       res.locals.oneItem = items.rows;
-      pool.end();
       next();
     }
   });
@@ -39,7 +38,6 @@ itemController.addItem = (req, res, next) => {
     if (err) res.send(err).end();
     else {
       res.locals.data = user.rows[0];
-      pool.end();
       next();
     }
   });
@@ -53,7 +51,6 @@ itemController.getAllItems = (req, res, next) => {
     if (err) res.send(err).end();
     else {
       res.locals.items = items.rows;
-      pool.end();
       next();
     }
   });
@@ -68,7 +65,6 @@ itemController.searchItem = (req, res, next) => {
     if (err) res.send(err).end();
     else {
       res.locals.search = items.rows;
-      pool.end();
       next();
     }
   });
@@ -83,7 +79,6 @@ itemController.searchCategory = (req, res, next) => {
     if (err) res.send(err).end();
     else {
       res.locals.category = items.rows;
-      pool.end();
       next();
     }
   });
