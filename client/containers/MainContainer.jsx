@@ -6,14 +6,15 @@
 /* eslint-disable react */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Navigation from './NavigationContainer.jsx';
+import NavigationContainer from './NavigationContainer.jsx';
 import Cards from './CardsContainer.jsx';
 import types from '../constants/actionTypes';
 import * as actions from '../actions/actions';
-import ItemForm from '../components/ItemForm.jsx';
 import AddItemForm from '../components/AddItemForm.jsx';
+import Login from '../components/Login';
+import Account from './Account';
 
 // use this.props.cards to access state in our components below
 const mapStateToProps = store => ({
@@ -49,25 +50,38 @@ class MainContainer extends Component {
   render() {
     // console.log('here are ur props ',this.props.cards.items);
     return (
-      <div>
-        <div id="navdiv">
-          <Navigation
-            fetchSearchedItems={this.props.fetchSearchedItems}
-            fetchCategory={this.props.fetchCategory}
-            searchValue={this.props.cards.searchBoxValue}
-            searchBoxChange={this.props.searchBoxChange}
-          />
+      <Router>
+        <div>
+          <div id="navdiv">
+            <NavigationContainer
+              fetchSearchedItems={this.props.fetchSearchedItems}
+              fetchCategory={this.props.fetchCategory}
+              searchValue={this.props.cards.searchBoxValue}
+              searchBoxChange={this.props.searchBoxChange}
+            />
+          </div>
+
+          <Switch>
+            <Route exact path="/Login" render={() => <Login />} />
+            <Route exact path="/Account" render={() => <Account />} />
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <div id="cardsdiv">
+                  <Cards
+                    items={this.props.cards.items}
+                    fetchFlag={this.props.cards.fetching}
+                    loading={this.props}
+                  />
+                </div>
+              )}
+            />
+          </Switch>
+
+          {/* <AddItemForm /> */}
         </div>
-        <div id="cardsdiv">
-          <Cards
-            items={this.props.cards.items}
-            fetchFlag={this.props.cards.fetching}
-            loading={this.props}
-          />
-        </div>
-        {/* <ItemForm /> */}
-        <AddItemForm></AddItemForm>
-      </div>
+      </Router>
     );
   }
 }
