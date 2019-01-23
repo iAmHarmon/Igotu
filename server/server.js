@@ -2,10 +2,15 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
+require('dotenv').config();
+
 const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
 const request = require('request');
 require('dotenv').config();
+require('./controllers/passportController');
 
 const app = express();
 const port = 3000;
@@ -15,9 +20,24 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-TypeError, Accept');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-TypeError, Accept'
+  );
   next();
 });
+
+// * REDIRECTS USER TO GOOGLE WITH APPID
+app.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'] // What information do we need from google?
+  }),
+  (req, res) => {}
+);
+
+// * REDIRECT FROM GOOGLE BACK TO APP-SERVER WITH GOOGLE CODE. PASSPORT SENDS THIS CODE BACK TO GOOGLE
+app.get('/auth/google/callback', passport.authenticate('google'));
 
 app.get('/user/:email', (req, res) => {
   // joins user table and item table
