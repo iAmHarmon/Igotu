@@ -73,7 +73,8 @@ class MainContainer extends Component {
             <Route exact path="/Login" render={() => <Login />} />
             <Route exact path="/Account" render={() => <Account fetchReturnedItems={this.props.fetchReturnedItems}
             getSearchInput={this.props.getSearchInput}
-            input={this.props.addItem.input}/>} />
+            input={this.props.addItem.input}
+            returnObjArr={this.props.addItem.returnObjArr}/>} />
             <Route
               exact
               path="/"

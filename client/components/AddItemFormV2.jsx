@@ -4,7 +4,7 @@ import React from 'react';
     function handleChange(e) {
       //console.log(e.target.value);
       console.log(props.input);
-
+      console.log('this is the fetched items',props.returnObjArr);
       props.getSearchInput(e.target.value);
     }
 

@@ -91,7 +91,7 @@ export const fetchReturnedItems = search => dispatch => {
     .then(data => JSON.parse(data))
     .then(bdata =>{
       console.log('this is bdata2',bdata.items);
-      //dispatch(returnedItems(data));
+      dispatch(returnedItems(bdata.items));
     })
     .catch(() => dispatch(fetchError));
 };

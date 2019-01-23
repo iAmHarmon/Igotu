@@ -16,7 +16,8 @@ const Account = props => {
       </div>
       <AddItemFormV2 fetchReturnedItems={props.fetchReturnedItems}
       getSearchInput={props.getSearchInput}
-      input={props.input} />
+      input={props.input}
+      returnObjArr={props.returnObjArr} />
     </div>
   );
 };
