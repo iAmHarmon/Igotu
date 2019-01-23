@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
+const request = require('request');
 require('dotenv').config();
 
 const app = express();
@@ -45,6 +46,18 @@ app.post('/addUser', userController.addUser, (req, res) => {
 
 app.post('/addItem', itemsController.addItem, (req, res) => {
   res.status(200).json(res.locals.data);
+});
+
+app.get('/checkupcite', (req,res) => {
+  if(req.query.val.length === 12 && !isNaN(Number(req.query.val))){
+    request(`https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`, function (error, response, body) {
+      res.json(body);
+    });
+  }else{
+    request(`https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`, function (error, response, body) {
+      res.json(body);
+    });
+  }
 });
 
 app.delete('/deleteItem', itemsController.deleteItem, (req, res) => {

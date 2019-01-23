@@ -19,6 +19,7 @@ export const searchValueChange = value => ({
   payload: value
 });
 
+
 export const fetchItemsData = () => dispatch => {
   dispatch(fetchItemsStart());
 
@@ -64,3 +65,36 @@ export const fetchCategoryItems = category => dispatch => {
 //   type: types.LOGIN,
 //   payload: data
 // });
+
+
+///////// ADDING ITEM FUNCTIONALITY ////////////
+
+export const getSearchInput= value => ({
+  type: types.GET_SEARCH_INPUT,
+  payload: value
+});
+
+export const fetchingItems = () => ({
+  type: types.FETCHING_ITEMS
+});
+
+export const returnedItems = resp => ({
+  type: types.RETURNED_ITEMS,
+  payload: resp
+});
+
+export const fetchReturnedItems = search => dispatch => {
+  dispatch(fetchingItems());
+  console.log('this is search',search);
+  fetch(`/checkupcite?val=${search}`)
+    .then((response) => response.json())
+    .then(data => JSON.parse(data))
+    .then(bdata =>{
+      console.log('this is bdata2',bdata.items);
+      //dispatch(returnedItems(data));
+    })
+    .catch(() => dispatch(fetchError));
+};
+
+
+
