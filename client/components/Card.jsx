@@ -4,6 +4,7 @@ const styleString = `background-image: url({props.info.photo})`;
 
 const Card = props => {
   console.log('in cards for item', props.info.item_name);
+  console.log('distance info in card', props.info.distance);
   const styles = { backgroundImage: 'url(' + props.info.photo + ')' };
   return (
     <div className="card col-2">
@@ -20,7 +21,7 @@ const Card = props => {
         <div className="content-body content">
           <p>{props.info.item_details}</p>
         </div>
-        <div className="card-footer content">distance and driving data here</div>
+        <div className="card-footer content">{props.info.distance}</div>
       </div>
     </div>
   );

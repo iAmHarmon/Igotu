@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
+const distanceMatrix = require('./google_api/distance-matrix');
 require('dotenv').config();
 
 const app = express();
@@ -27,15 +28,25 @@ app.get('/item/:id', itemsController.getOneItem, (req, res) => {
   res.status(200).json(res.locals.oneItem);
 });
 
-app.get('/search/:item_name', itemsController.searchItem, (req, res) => {
-  res.status(200).json(res.locals.search);
-});
+app.get(
+  '/search/:item_name',
+  itemsController.searchItem,
+  distanceMatrix.getDistance,
+  (req, res) => {
+    res.status(200).json(res.locals.items);
+  }
+);
 
-app.get('/category/:category', itemsController.searchCategory, (req, res) => {
-  res.status(200).json(res.locals.category);
-});
+app.get(
+  '/category/:category',
+  itemsController.searchCategory,
+  distanceMatrix.getDistance,
+  (req, res) => {
+    res.status(200).json(res.locals.items);
+  }
+);
 
-app.get('/allItems', itemsController.getAllItems, (req, res) => {
+app.get('/allItems', itemsController.getAllItems, distanceMatrix.getDistance, (req, res) => {
   res.status(200).json(res.locals.items);
 });
 

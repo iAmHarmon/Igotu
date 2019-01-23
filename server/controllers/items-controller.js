@@ -45,7 +45,8 @@ itemController.addItem = (req, res, next) => {
 
 itemController.getAllItems = (req, res, next) => {
   const query = {
-    text: 'SELECT * FROM items'
+    text: `select i.id, item_name, price, item_details, photo, street, city, state, zip  from items_location
+    full outer join items i on items_location.item_id = i.id`
   };
   pool.query(query.text, (err, items) => {
     if (err) res.send(err).end();
@@ -58,13 +59,14 @@ itemController.getAllItems = (req, res, next) => {
 
 itemController.searchItem = (req, res, next) => {
   const query = {
-    text: 'SELECT * FROM items WHERE item_name >= $1',
+    text: `select i.id, item_name, price, item_details, photo, street, city, state, zip  from items
+    inner join items_location i on items.id = i.item_id where item_name = $1`,
     values: [req.params.item_name]
   };
   pool.query(query.text, query.values, (err, items) => {
     if (err) res.send(err).end();
     else {
-      res.locals.search = items.rows;
+      res.locals.items = items.rows;
       next();
     }
   });
@@ -72,13 +74,14 @@ itemController.searchItem = (req, res, next) => {
 
 itemController.searchCategory = (req, res, next) => {
   const query = {
-    text: 'SELECT * FROM items WHERE category = $1',
+    text: `select i.id, item_name, price, item_details, photo, street, city, state, zip  from items
+    inner join items_location i on items.id = i.item_id where category = $1`,
     values: [req.params.category]
   };
   pool.query(query.text, query.values, (err, items) => {
     if (err) res.send(err).end();
     else {
-      res.locals.category = items.rows;
+      res.locals.items = items.rows;
       next();
     }
   });
