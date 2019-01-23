@@ -26,6 +26,9 @@ const Card = props => {
   );
 };
 
+/**
+ * From cirrus
+ */
 // div class="card slide-up">
 //     <div class="card-container">
 //         <div class="card-image" style="background-image: url(imageurl)"></div>
