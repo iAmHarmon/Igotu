@@ -1,5 +1,6 @@
 import React from 'react';
 import Cards from '../containers/CardsContainer.jsx';
+import Card from './Card.jsx';
 
   const AddItemForm = props => {
     function handleChange(e) {
@@ -8,7 +9,7 @@ import Cards from '../containers/CardsContainer.jsx';
       console.log('this is the fetched items',props.returnObjArr);
       props.getSearchInput(e.target.value);
     }
-  
+  //create a card array to display information returned from the api call
   let cardArr = [];
   if(props.returnObjArr){
     for(let i = 0; i < props.returnObjArr.length; i++){
@@ -16,6 +17,7 @@ import Cards from '../containers/CardsContainer.jsx';
       info.item_name = props.returnObjArr[i].title;
       info.price = Math.floor((props.returnObjArr[i].highest_recorded_price)/10);
       info.item_details = '';
+      info.created_at = new Date();
       if(props.returnObjArr[i].images[0]){
         info.photo = props.returnObjArr[i].images[0];
       }else{
@@ -25,12 +27,25 @@ import Cards from '../containers/CardsContainer.jsx';
     }
   }
   console.log('this is the cardArr ', cardArr);
+  //create the element to display the cards
   let ItemCards = <div></div>;
+  // if(cardArr.length > 0){
+  //   ItemCards = (
+  //     <div>
+  //       <Cards items={cardArr}/>
+  //       <button>Add Item</button>
+  //     </div>
+  //   )
+  // }
   if(cardArr.length > 0){
+    let cardDiv = [];
+    for(let i = 0; i < cardArr.length; i ++){
+       let cardItem = <div><button id={i}>Add Item</button><Card info={cardArr[i]}/></div>
+       cardDiv.push(cardItem);
+    }
     ItemCards = (
       <div>
-        <Cards items={cardArr}/>
-        <button>Add Item</button>
+        {cardDiv}
       </div>
     )
   }
@@ -46,7 +61,7 @@ import Cards from '../containers/CardsContainer.jsx';
       >
          <label>
          Add Item by UPC or Name:
-        <input type="text" size="50"/>
+        <input type="text"  size="50"/>
         </label>
        <input type="submit" value="Submit" />
      </form>
