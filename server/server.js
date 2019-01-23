@@ -2,6 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+require('dotenv').config();
+
 const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
 require('dotenv').config();
@@ -14,9 +18,15 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-TypeError, Accept');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-TypeError, Accept'
+  );
   next();
 });
+
+// * OAUTH FLOW SETUP. PASSPORT.USE TELLS PASSPORT TO USE THE GOOGLE STRATEGY FOR OAUTH
+passport.use(new GoogleStrategy());
 
 app.get('/user/:email', (req, res) => {
   // joins user table and item table
