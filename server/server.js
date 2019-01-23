@@ -47,6 +47,7 @@ app.get(
 );
 
 app.get('/allItems', itemsController.getAllItems, distanceMatrix.getDistance, (req, res) => {
+  console.log(res.locals.items);
   res.status(200).json(res.locals.items);
 });
 

@@ -3,7 +3,7 @@ const request = require('request');
 const distanceMatrix = {};
 
 distanceMatrix.getDistance = (req, res, next) => {
-  if (!req.query.origin) next();
+  // if (!req.query.origin) next();
   const origin = req.query.origin;
   const itemsLocations = [];
 
@@ -14,7 +14,7 @@ distanceMatrix.getDistance = (req, res, next) => {
   const destLocations = itemsLocations.join('|');
 
   const uri = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=810+s+spring+st+los+angeles&destinations=${destLocations}&key=AIzaSyB0itacv2frK4HqF8SnG0ZVxALxCcYVBPw&units=imperial`;
-  console.log('G.URI', uri);
+  // console.log('G.URI', uri);
   request(
     {
       method: 'GET',
@@ -24,12 +24,10 @@ distanceMatrix.getDistance = (req, res, next) => {
       if (err) console.log('G.API Error:', err);
       const parseBody = JSON.parse(body);
       for (let i = 0; i < parseBody.rows[0].elements.length; i += 1) {
-        // console.log(parseBody.rows[0].elements.length);
-        // console.log(parseBody.rows[0].elements[i].distance);
         res.locals.items[i].distance = parseBody.rows[0].elements[i].distance.text;
         res.locals.items[i].eta = parseBody.rows[0].elements[i].duration.text;
       }
-      console.log('Items after dist:', res.locals.items);
+      // console.log('Items after dist:', res.locals.items);
       next();
     }
   );
