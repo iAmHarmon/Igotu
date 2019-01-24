@@ -6,13 +6,10 @@ const passport = require('passport');
 // const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('dotenv').config();
 
+const request = require('request');
 const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
-<<<<<<< HEAD
 const distanceMatrix = require('./google_api/distance-matrix');
-=======
-const request = require('request');
->>>>>>> d883588be59ab70bc4dbdbd2b7de3c30b13f23cb
 require('dotenv').config();
 require('./controllers/passportController');
 
@@ -24,10 +21,7 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-TypeError, Accept'
-  );
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-TypeError, Accept');
   next();
 });
 
@@ -83,15 +77,21 @@ app.post('/addItem', itemsController.addItem, (req, res) => {
   res.status(200).json(res.locals.data);
 });
 
-app.get('/checkupcite', (req,res) => {
-  if(req.query.val.length === 12 && !isNaN(Number(req.query.val))){
-    request(`https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`, function (error, response, body) {
-      res.json(body);
-    });
-  }else{
-    request(`https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`, function (error, response, body) {
-      res.json(body);
-    });
+app.get('/checkupcite', (req, res) => {
+  if (req.query.val.length === 12 && !isNaN(Number(req.query.val))) {
+    request(
+      `https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`,
+      (error, response, body) => {
+        res.json(body);
+      }
+    );
+  } else {
+    request(
+      `https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`,
+      (error, response, body) => {
+        res.json(body);
+      }
+    );
   }
 });
 
