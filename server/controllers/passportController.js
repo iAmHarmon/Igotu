@@ -10,7 +10,7 @@ require('dotenv').config();
 passport.serializeUser((user, done) => {
   console.log('users~~~~~~~~~: ', user);
 
-  let id = user.id;
+  const id = user.id;
   done(null, id);
 });
 
@@ -52,10 +52,6 @@ passport.use(
         if (users.rows.length === 0) {
           // * IF USER DOESN'T EXIST, ADD USER
           const query = {
-<<<<<<< HEAD
-            text: 'INSERT INTO users(google_id, user_name) VALUES($1, $2) RETURNING *',
-            values: [profile.id, profile.displayName]
-=======
             text:
               'INSERT INTO users(google_oauth_id, user_name, user_email_address, picture_url) VALUES($1, $2, $3, $4) RETURNING *',
             values: [
@@ -64,7 +60,6 @@ passport.use(
               profile.emails[0].value,
               profile.photos[0].value
             ]
->>>>>>> 70dfcc5b99280d1b646060501c2df0a5efa045b4
           };
 
           pool.query(query.text, query.values, (err, users) => {
