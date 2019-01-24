@@ -15,10 +15,8 @@ import Card from './Card.jsx';
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         //body: JSON.stringify(cardArr[e.target.id])
-        body: JSON.stringify(hello)
+        body: JSON.stringify(cardArr[e.target.id])
       }).then(()=> console.log('completed fetch'))
-      console.log(hello);
-      console.log(cardArr[e.target.id])
     }
   //create a card array to display information returned from the api call
   let cardArr = [];
