@@ -1,6 +1,5 @@
 const passport = require('passport');
-require('../controllers/passportController');
-require('dotenv').config();
+// require('dotenv').config();
 
 module.exports = app => {
   // * REDIRECTS USER TO GOOGLE WITH APPID
@@ -8,16 +7,19 @@ module.exports = app => {
     '/auth/google',
     passport.authenticate('google', {
       scope: ['profile', 'email'] // SPECIFIES INFORMATION FROM GOOGLE
-    }),
-    (req, res) => {}
+    })
   );
 
   // * REDIRECT FROM GOOGLE BACK TO APP-SERVER WITH GOOGLE CODE. PASSPORT SENDS THIS CODE BACK TO GOOGLE
   app.get(
     '/auth/google/callback',
-    passport.authenticate('google'),
+    passport.authenticate('google', { failureRedirect: '/failed' }),
     (req, res) => {
-      res.redirect('/api/current_user');
+      console.log('IM HERE', req.session.passport.user);
+      console.log('HELLO', req.cookies);
+      res.json(req.user);
+      //   res.redirect('/');
+      // res.sendStatus(200);
     }
   );
 
@@ -27,6 +29,7 @@ module.exports = app => {
   });
 
   app.get('/api/current_user', (req, res) => {
+    if (!req.user) res.json('');
     res.json(req.user);
   });
 };

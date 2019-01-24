@@ -7,22 +7,24 @@ require('dotenv').config();
 // console.log('llllllllll', pool);
 
 // * SERIALIZE USER
-passport.serializeUser((users, done) => {
-  console.log('users~~~~~~~~~: ', users);
+passport.serializeUser((user, done) => {
+  console.log('users~~~~~~~~~: ', user);
 
-  let id = users.rows[0].id;
+  let id = user.id;
   done(null, id);
 });
 
 // * DESERIALIZE USER
 passport.deserializeUser((id, done) => {
+  console.log('!!!!!!!!!!! ---- desrialized wi user ', id);
+
   const query = {
     text: 'SELECT * FROM users WHERE id = $1',
     values: [id]
   };
-  pool.query(query.text, query.values, (err, user) => {
+  pool.query(query.text, query.values, (err, users) => {
     if (err) console.error(err);
-    done(null, user.rows[0]);
+    done(null, users.rows[0]);
   });
 });
 
@@ -32,7 +34,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/auth/google/callback'
+      callbackURL: '/auth/google/callback',
+      proxy: true
     },
     (accessToken, refreshToken, profile, done) => {
       // * ADD USER INFORMATION TO SQL DATABASE
@@ -43,10 +46,10 @@ passport.use(
         values: [profile.id]
       };
 
-      pool.query(query.text, query.values, (err, user) => {
+      pool.query(query.text, query.values, (err, users) => {
         // console.log('INSIDE THE INSERT STATEMENT');
         // console.log('+++++++++user: ', user);
-        if (user.rows.length === 0) {
+        if (users.rows.length === 0) {
           // * IF USER DOESN'T EXIST, ADD USER
           const query = {
             text:
@@ -59,15 +62,20 @@ passport.use(
             ]
           };
 
-          pool.query(query.text, query.values, (err, user) => {
+          pool.query(query.text, query.values, (err, users) => {
             // console.log('~~~~~~~~~~~~~~BEFORE ERR');
             if (err) console.err(err);
             // console.log('I INSERTED', user);
-            done(null, user);
+            console.log('00000000000', users);
+            done(null, users.rows[0]);
           });
         }
-        if (err) console.error(err);
-        else done(null, user);
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('else', users);
+          done(null, users.rows[0]);
+        }
       });
     }
   )
