@@ -15,15 +15,15 @@ require('./controllers/passportController');
 const app = express();
 const PORT = 3000;
 
-// app.use(cookieParser());
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Origin, X-Requested-With, Content-TypeError, Accept'
-//   );
-//   next();
-// });
+app.use(cookieParser());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-TypeError, Accept'
+  );
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(
@@ -32,7 +32,7 @@ app.use(
     keys: [process.env.COOKIE_KEY]
   })
 );
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -64,7 +64,26 @@ app.get('/allItems', itemsController.getAllItems, (req, res) => {
 // });
 
 app.post('/addItem', itemsController.addItem, (req, res) => {
+  console.log('this is the req.body in addItem', req.body);
   res.status(200).json(res.locals.data);
+});
+
+app.get('/checkupcite', (req, res) => {
+  if (req.query.val.length === 12 && !isNaN(Number(req.query.val))) {
+    request(
+      `https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`,
+      function(error, response, body) {
+        res.json(body);
+      }
+    );
+  } else {
+    request(
+      `https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`,
+      function(error, response, body) {
+        res.json(body);
+      }
+    );
+  }
 });
 
 app.delete('/deleteItem', itemsController.deleteItem, (req, res) => {

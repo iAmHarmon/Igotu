@@ -18,7 +18,8 @@ import Account from './Account';
 
 // use this.props.cards to access state in our components below
 const mapStateToProps = store => ({
-  cards: store.cards
+  cards: store.cards,
+  addItem: store.addItem
   // search: store.search
 });
 
@@ -35,7 +36,14 @@ const mapDispatchToProps = dispatch => ({
   },
   fetchCategory: value => {
     dispatch(actions.fetchCategoryItems(value));
+  },
+  fetchReturnedItems: value => {
+    dispatch(actions.fetchReturnedItems(value));
+  },
+  getSearchInput: value => {
+    dispatch(actions.getSearchInput(value));
   }
+
 });
 
 class MainContainer extends Component {
@@ -63,7 +71,10 @@ class MainContainer extends Component {
 
           <Switch>
             <Route exact path="/Login" render={() => <Login />} />
-            <Route exact path="/Account" render={() => <Account />} />
+            <Route exact path="/Account" render={() => <Account fetchReturnedItems={this.props.fetchReturnedItems}
+            getSearchInput={this.props.getSearchInput}
+            input={this.props.addItem.input}
+            returnObjArr={this.props.addItem.returnObjArr}/>} />
             <Route
               exact
               path="/"
