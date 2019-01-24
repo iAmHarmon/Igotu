@@ -10,7 +10,7 @@ require('dotenv').config();
 passport.serializeUser((user, done) => {
   console.log('users~~~~~~~~~: ', user);
 
-  let id = user.id;
+  const id = user.id;
   done(null, id);
 });
 

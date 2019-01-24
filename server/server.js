@@ -1,13 +1,16 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 
+const request = require('request');
 // const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
+const distanceMatrix = require('./google_api/distance-matrix');
 require('dotenv').config();
+
 console.log('ENVAR:', process.env);
 
 require('./controllers/passportController');
@@ -18,10 +21,7 @@ const PORT = 3000;
 app.use(cookieParser());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-TypeError, Accept'
-  );
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-TypeError, Accept');
   next();
 });
 
@@ -47,15 +47,26 @@ app.get('/item/:id', itemsController.getOneItem, (req, res) => {
   res.status(200).json(res.locals.oneItem);
 });
 
-app.get('/search/:item_name', itemsController.searchItem, (req, res) => {
-  res.status(200).json(res.locals.search);
-});
+app.get(
+  '/search/:item_name',
+  itemsController.searchItem,
+  distanceMatrix.getDistance,
+  (req, res) => {
+    res.status(200).json(res.locals.items);
+  }
+);
 
-app.get('/category/:category', itemsController.searchCategory, (req, res) => {
-  res.status(200).json(res.locals.category);
-});
+app.get(
+  '/category/:category',
+  itemsController.searchCategory,
+  distanceMatrix.getDistance,
+  (req, res) => {
+    res.status(200).json(res.locals.items);
+  }
+);
 
-app.get('/allItems', itemsController.getAllItems, (req, res) => {
+app.get('/allItems', itemsController.getAllItems, distanceMatrix.getDistance, (req, res) => {
+  // console.log(res.locals.items);
   res.status(200).json(res.locals.items);
 });
 
@@ -72,14 +83,14 @@ app.get('/checkupcite', (req, res) => {
   if (req.query.val.length === 12 && !isNaN(Number(req.query.val))) {
     request(
       `https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`,
-      function(error, response, body) {
+      (error, response, body) => {
         res.json(body);
       }
     );
   } else {
     request(
       `https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`,
-      function(error, response, body) {
+      (error, response, body) => {
         res.json(body);
       }
     );
