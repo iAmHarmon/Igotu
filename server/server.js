@@ -1,42 +1,42 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const passport = require('passport');
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
-require('dotenv').config();
 
 const request = require('request');
-const userController = require('./controllers/users-controller');
+// const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
 const distanceMatrix = require('./google_api/distance-matrix');
 require('dotenv').config();
+
+console.log('ENVAR:', process.env);
+
 require('./controllers/passportController');
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(bodyParser.json());
-
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-TypeError, Accept');
   next();
 });
 
-// * REDIRECTS USER TO GOOGLE WITH APPID
-app.get(
-  '/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'] // What information do we need from google?
-  }),
-  (req, res) => {}
+app.use(bodyParser.json());
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEY]
+  })
 );
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// * REDIRECT FROM GOOGLE BACK TO APP-SERVER WITH GOOGLE CODE. PASSPORT SENDS THIS CODE BACK TO GOOGLE
-app.get('/auth/google/callback', passport.authenticate('google'));
+require('./routes/authRoutes')(app);
 
 app.get('/user/:email', (req, res) => {
   // joins user table and item table
@@ -70,9 +70,9 @@ app.get('/allItems', itemsController.getAllItems, distanceMatrix.getDistance, (r
   res.status(200).json(res.locals.items);
 });
 
-app.post('/addUser', userController.addUser, (req, res) => {
-  res.status(200).json(res.locals.data);
-});
+// app.post('/addUser', userController.addUser, (req, res) => {
+//   res.status(200).json(res.locals.data);
+// });
 
 app.post('/addItem', itemsController.addItem, (req, res) => {
   console.log('this is the req.body in addItem', req.body);
@@ -104,4 +104,4 @@ app.delete('/deleteItem', itemsController.deleteItem, (req, res) => {
 
 app.use(express.static(path.resolve(__dirname, '../build')));
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
