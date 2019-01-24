@@ -13,13 +13,15 @@ import Cards from './CardsContainer.jsx';
 import types from '../constants/actionTypes';
 import * as actions from '../actions/actions';
 import AddItemForm from '../components/AddItemForm.jsx';
-import Login from '../components/Login';
-import Account from './Account';
+import Login from '../components/Login.jsx';
+import Account from './Account.jsx';
+import LocationEntry from '../components/LocationEntry.jsx';
 
 // use this.props.cards to access state in our components below
 const mapStateToProps = store => ({
   cards: store.cards,
-  addItem: store.addItem
+  addItem: store.addItem,
+  location: store.location
   // search: store.search
 });
 
@@ -42,8 +44,13 @@ const mapDispatchToProps = dispatch => ({
   },
   getSearchInput: value => {
     dispatch(actions.getSearchInput(value));
+  },
+  locationBoxChange: value => {
+    dispatch(actions.locationBoxChange(value));
+  },
+  setLocation: value => {
+    dispatch(actions.locationSet(value));
   }
-
 });
 
 class MainContainer extends Component {
@@ -68,13 +75,27 @@ class MainContainer extends Component {
               searchBoxChange={this.props.searchBoxChange}
             />
           </div>
-
+          <div id="location-box">
+            <LocationEntry
+              location={this.props.location}
+              locationBoxChange={this.props.locationBoxChange}
+              setLocation={this.props.setLocation}
+            />
+          </div>
           <Switch>
             <Route exact path="/Login" render={() => <Login />} />
-            <Route exact path="/Account" render={() => <Account fetchReturnedItems={this.props.fetchReturnedItems}
-            getSearchInput={this.props.getSearchInput}
-            input={this.props.addItem.input}
-            returnObjArr={this.props.addItem.returnObjArr}/>} />
+            <Route
+              exact
+              path="/Account"
+              render={() => (
+                <Account
+                  fetchReturnedItems={this.props.fetchReturnedItems}
+                  getSearchInput={this.props.getSearchInput}
+                  input={this.props.addItem.input}
+                  returnObjArr={this.props.addItem.returnObjArr}
+                />
+              )}
+            />
             <Route
               exact
               path="/"

@@ -23,8 +23,7 @@ passport.use(
       pool.query(query.text, query.values, (err, user) => {
         if (user.length === 0) {
           const query = {
-            text:
-              'INSERT INTO users(google_id, user_name) VALUES($1, $2) RETURNING *',
+            text: 'INSERT INTO users(google_id, user_name) VALUES($1, $2) RETURNING *',
             values: [profile.id, profile.displayName]
           };
           pool.query(query.text, query.values, (err, user) => {

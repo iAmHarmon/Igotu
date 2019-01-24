@@ -18,7 +18,7 @@ const Search = props => {
         }}
         onChange={handleChange}
       >
-        <input type="search" name="searchbox" size="35" />
+        <input type="search" name="searchbox" size="35" placeholder="search" />
       </form>
     </div>
   );

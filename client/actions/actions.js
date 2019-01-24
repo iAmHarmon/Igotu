@@ -1,4 +1,5 @@
 import * as types from '../constants/actionTypes';
+import store from '../store';
 
 export const fetchItemsStart = () => ({
   type: types.GET_ALL_ITEMS_START
@@ -19,11 +20,10 @@ export const searchValueChange = value => ({
   payload: value
 });
 
-
 export const fetchItemsData = () => dispatch => {
   dispatch(fetchItemsStart());
 
-  fetch('http://localhost:3000/allItems')
+  fetch(`http://localhost:3000/allItems?origin=${store.currentLocation}`)
     .then(response => response.json())
     .then(data => {
       console.log('we got the items', data);
@@ -35,7 +35,7 @@ export const fetchItemsData = () => dispatch => {
 export const fetchSearchedItems = search => dispatch => {
   dispatch(fetchItemsStart());
 
-  fetch(`http://localhost:3000/search/${search}`)
+  fetch(`http://localhost:3000/search/${search}?origin=${store.currentLocation}`)
     .then(response => response.json())
     .then(data => {
       console.log('we got the searched items');
@@ -47,7 +47,7 @@ export const fetchSearchedItems = search => dispatch => {
 export const fetchCategoryItems = category => dispatch => {
   dispatch(fetchItemsStart());
 
-  fetch(`http://localhost:3000/category/${category}`)
+  fetch(`http://localhost:3000/category/${category}?origin=${store.currentLocation}`)
     .then(response => response.json())
     .then(data => {
       console.log('we got the category items');
@@ -66,10 +66,9 @@ export const fetchCategoryItems = category => dispatch => {
 //   payload: data
 // });
 
+// /////// ADDING ITEM FUNCTIONALITY ////////////
 
-///////// ADDING ITEM FUNCTIONALITY ////////////
-
-export const getSearchInput= value => ({
+export const getSearchInput = value => ({
   type: types.GET_SEARCH_INPUT,
   payload: value
 });
@@ -85,16 +84,24 @@ export const returnedItems = resp => ({
 
 export const fetchReturnedItems = search => dispatch => {
   dispatch(fetchingItems());
-  console.log('this is search',search);
+  console.log('this is search', search);
   fetch(`/checkupcite?val=${search}`)
-    .then((response) => response.json())
+    .then(response => response.json())
     .then(data => JSON.parse(data))
-    .then(bdata =>{
-      console.log('this is bdata2',bdata.items);
+    .then(bdata => {
+      console.log('this is bdata2', bdata.items);
       dispatch(returnedItems(bdata.items));
     })
     .catch(() => dispatch(fetchError));
 };
 
+// Location input box actions
+export const locationBoxChange = value => ({
+  type: types.LOCATION_BOX_CHANGE,
+  payload: value
+});
 
-
+export const locationSet = value => ({
+  type: types.LOCATION_SET,
+  payload: value
+});
