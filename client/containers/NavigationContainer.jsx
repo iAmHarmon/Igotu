@@ -10,10 +10,7 @@ import SubNavigation from './SubNavContainer.jsx';
 // import * as actions from '../constants/actionTypes';
 
 const Navigation = props => (
-  <div
-    id="nav-bar"
-    className="header header-fixed unselectable header-animated"
-  >
+  <div id="nav-bar" className="header header-fixed unselectable header-animated header-dark">
     <div className="header-brand">
       <div className="nav_item no-hover">
         <Link to="/">
