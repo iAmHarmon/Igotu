@@ -11,7 +11,11 @@ userController.addUser = (req, res, next) => {
   const query = {
     text:
       'INSERT INTO users(user_name, user_password, user_email_address) VALUES($1, $2, $3) RETURNING *',
-    values: [req.body.user_name, req.body.user_password, req.body.user_email_address]
+    values: [
+      req.body.user_name,
+      req.body.user_password,
+      req.body.user_email_address
+    ]
   };
   pool.query(query.text, query.values, (err, user) => {
     if (err) {

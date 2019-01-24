@@ -2,10 +2,19 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
+require('dotenv').config();
+
 const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
+<<<<<<< HEAD
 const distanceMatrix = require('./google_api/distance-matrix');
+=======
+const request = require('request');
+>>>>>>> d883588be59ab70bc4dbdbd2b7de3c30b13f23cb
 require('dotenv').config();
+require('./controllers/passportController');
 
 const app = express();
 const port = 3000;
@@ -15,9 +24,24 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-TypeError, Accept');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-TypeError, Accept'
+  );
   next();
 });
+
+// * REDIRECTS USER TO GOOGLE WITH APPID
+app.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'] // What information do we need from google?
+  }),
+  (req, res) => {}
+);
+
+// * REDIRECT FROM GOOGLE BACK TO APP-SERVER WITH GOOGLE CODE. PASSPORT SENDS THIS CODE BACK TO GOOGLE
+app.get('/auth/google/callback', passport.authenticate('google'));
 
 app.get('/user/:email', (req, res) => {
   // joins user table and item table
@@ -57,6 +81,18 @@ app.post('/addUser', userController.addUser, (req, res) => {
 
 app.post('/addItem', itemsController.addItem, (req, res) => {
   res.status(200).json(res.locals.data);
+});
+
+app.get('/checkupcite', (req,res) => {
+  if(req.query.val.length === 12 && !isNaN(Number(req.query.val))){
+    request(`https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`, function (error, response, body) {
+      res.json(body);
+    });
+  }else{
+    request(`https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`, function (error, response, body) {
+      res.json(body);
+    });
+  }
 });
 
 app.delete('/deleteItem', itemsController.deleteItem, (req, res) => {
