@@ -18,6 +18,7 @@ const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -74,6 +75,7 @@ app.post('/addUser', userController.addUser, (req, res) => {
 });
 
 app.post('/addItem', itemsController.addItem, (req, res) => {
+  console.log('this is the req.body in addItem', req.body);
   res.status(200).json(res.locals.data);
 });
 
