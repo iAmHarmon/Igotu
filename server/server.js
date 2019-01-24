@@ -1,24 +1,21 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const passport = require('passport');
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
-require('dotenv').config();
 
-const userController = require('./controllers/users-controller');
+// const userController = require('./controllers/users-controller');
 const itemsController = require('./controllers/items-controller');
-const request = require('request');
 require('dotenv').config();
+console.log('ENVAR:', process.env);
+
 require('./controllers/passportController');
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(bodyParser.json());
-
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -28,17 +25,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// * REDIRECTS USER TO GOOGLE WITH APPID
-app.get(
-  '/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'] // What information do we need from google?
-  }),
-  (req, res) => {}
+app.use(bodyParser.json());
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEY]
+  })
 );
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// * REDIRECT FROM GOOGLE BACK TO APP-SERVER WITH GOOGLE CODE. PASSPORT SENDS THIS CODE BACK TO GOOGLE
-app.get('/auth/google/callback', passport.authenticate('google'));
+require('./routes/authRoutes')(app);
 
 app.get('/user/:email', (req, res) => {
   // joins user table and item table
@@ -61,24 +59,30 @@ app.get('/allItems', itemsController.getAllItems, (req, res) => {
   res.status(200).json(res.locals.items);
 });
 
-app.post('/addUser', userController.addUser, (req, res) => {
-  res.status(200).json(res.locals.data);
-});
+// app.post('/addUser', userController.addUser, (req, res) => {
+//   res.status(200).json(res.locals.data);
+// });
 
 app.post('/addItem', itemsController.addItem, (req, res) => {
   console.log('this is the req.body in addItem', req.body);
   res.status(200).json(res.locals.data);
 });
 
-app.get('/checkupcite', (req,res) => {
-  if(req.query.val.length === 12 && !isNaN(Number(req.query.val))){
-    request(`https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`, function (error, response, body) {
-      res.json(body);
-    });
-  }else{
-    request(`https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`, function (error, response, body) {
-      res.json(body);
-    });
+app.get('/checkupcite', (req, res) => {
+  if (req.query.val.length === 12 && !isNaN(Number(req.query.val))) {
+    request(
+      `https://api.upcitemdb.com/prod/trial/lookup?upc=${req.query.val}`,
+      function(error, response, body) {
+        res.json(body);
+      }
+    );
+  } else {
+    request(
+      `https://api.upcitemdb.com/prod/trial/search?s=${req.query.val}`,
+      function(error, response, body) {
+        res.json(body);
+      }
+    );
   }
 });
 
@@ -89,4 +93,4 @@ app.delete('/deleteItem', itemsController.deleteItem, (req, res) => {
 
 app.use(express.static(path.resolve(__dirname, '../build')));
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
