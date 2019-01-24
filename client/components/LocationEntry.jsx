@@ -7,15 +7,16 @@ const LocationEntry = props => {
   console.log('LocationProps', props);
   return (
     <div className="input-control">
-      <input
-        type="search"
-        className="input-small"
-        placeholder="location"
-        onChange={handleChange}
-        onSubmit={() => {
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          console.log('submit loc: ', props.location.locationBox);
           props.setLocation(props.location.locationBox);
         }}
-      />
+        onChange={handleChange}
+      >
+        <input type="textbox" className="input-small" placeholder="location" />
+      </form>
     </div>
   );
 };

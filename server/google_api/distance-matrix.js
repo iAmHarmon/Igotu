@@ -13,7 +13,7 @@ distanceMatrix.getDistance = (req, res, next) => {
   });
   const destLocations = itemsLocations.join('|');
 
-  const uri = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=810+s+spring+st+los+angeles&destinations=${destLocations}&key=AIzaSyB0itacv2frK4HqF8SnG0ZVxALxCcYVBPw&units=imperial`;
+  const uri = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destLocations}&key=AIzaSyB0itacv2frK4HqF8SnG0ZVxALxCcYVBPw&units=imperial`;
   // console.log('G.URI', uri);
   request(
     {

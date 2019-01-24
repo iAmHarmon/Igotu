@@ -49,7 +49,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.locationBoxChange(value));
   },
   setLocation: value => {
-    dispatch(actions.locationSet(value));
+    dispatch(actions.setLocation(value));
   }
 });
 
@@ -76,6 +76,7 @@ class MainContainer extends Component {
             />
           </div>
           <div id="location-box">
+            <i className="fas fa-map-marker-alt" />
             <LocationEntry
               location={this.props.location}
               locationBoxChange={this.props.locationBoxChange}

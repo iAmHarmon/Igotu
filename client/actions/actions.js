@@ -105,3 +105,8 @@ export const locationSet = value => ({
   type: types.LOCATION_SET,
   payload: value
 });
+
+export const setLocation = value => dispatch => {
+  dispatch(locationSet(value));
+  dispatch(fetchItemsData());
+};
