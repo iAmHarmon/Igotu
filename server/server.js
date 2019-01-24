@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 
@@ -66,7 +66,7 @@ app.get(
 );
 
 app.get('/allItems', itemsController.getAllItems, distanceMatrix.getDistance, (req, res) => {
-  console.log(res.locals.items);
+  // console.log(res.locals.items);
   res.status(200).json(res.locals.items);
 });
 

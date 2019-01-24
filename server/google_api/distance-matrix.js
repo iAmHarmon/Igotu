@@ -5,7 +5,7 @@ const distanceMatrix = {};
 distanceMatrix.getDistance = (req, res, next) => {
   // if (!req.query.origin) next();
   const origin = req.query.origin;
-  console.log(req.query.origin);
+  console.log('!!!!!!!!!!!!!!!', req.query.origin);
   const itemsLocations = [];
 
   res.locals.items.map(item => {

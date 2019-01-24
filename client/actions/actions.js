@@ -22,8 +22,8 @@ export const searchValueChange = value => ({
 
 export const fetchItemsData = () => dispatch => {
   dispatch(fetchItemsStart());
-
-  fetch(`http://localhost:3000/allItems?origin=${store.currentLocation}`)
+  console.log('THIS IS STORE!!!!', store);
+  fetch(`http://localhost:3000/allItems/?origin=${store.getState().location.currentLocation}`)
     .then(response => response.json())
     .then(data => {
       console.log('we got the items', data);
