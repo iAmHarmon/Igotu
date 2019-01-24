@@ -9,6 +9,17 @@ import Card from './Card.jsx';
       console.log('this is the fetched items',props.returnObjArr);
       props.getSearchInput(e.target.value);
     }
+    function addItemtoDB(e) {
+      let hello = 'hello';
+      fetch('/addItem', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        //body: JSON.stringify(cardArr[e.target.id])
+        body: JSON.stringify(hello)
+      }).then(()=> console.log('completed fetch'))
+      console.log(hello);
+      console.log(cardArr[e.target.id])
+    }
   //create a card array to display information returned from the api call
   let cardArr = [];
   if(props.returnObjArr){
@@ -40,7 +51,7 @@ import Card from './Card.jsx';
   if(cardArr.length > 0){
     let cardDiv = [];
     for(let i = 0; i < cardArr.length; i ++){
-       let cardItem = <div><button id={i}>Add Item</button><Card info={cardArr[i]}/></div>
+       let cardItem = <div><button onClick={addItemtoDB} id={i}>Add Item</button><Card info={cardArr[i]}/></div>
        cardDiv.push(cardItem);
     }
     ItemCards = (
