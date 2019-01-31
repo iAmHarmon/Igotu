@@ -75,13 +75,15 @@ class MainContainer extends Component {
               searchBoxChange={this.props.searchBoxChange}
             />
           </div>
-          <div id="location-box">
-            <i className="fas fa-map-marker-alt" />
-            <LocationEntry
-              location={this.props.location}
-              locationBoxChange={this.props.locationBoxChange}
-              setLocation={this.props.setLocation}
-            />
+          <div className="row" id="location-box">
+            <div className="col-12 center">
+              <i className="fas fa-map-marker-alt" />
+              <LocationEntry
+                location={this.props.location}
+                locationBoxChange={this.props.locationBoxChange}
+                setLocation={this.props.setLocation}
+              />
+            </div>
           </div>
           <Switch>
             <Route exact path="/Login" render={() => <Login />} />

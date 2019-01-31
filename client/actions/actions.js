@@ -35,7 +35,9 @@ export const fetchItemsData = () => dispatch => {
 export const fetchSearchedItems = search => dispatch => {
   dispatch(fetchItemsStart());
 
-  fetch(`http://localhost:3000/search/${search}?origin=${store.currentLocation}`)
+  fetch(
+    `http://localhost:3000/search/${search}/?origin=${store.getState().location.currentLocation}`
+  )
     .then(response => response.json())
     .then(data => {
       console.log('we got the searched items');
@@ -47,7 +49,11 @@ export const fetchSearchedItems = search => dispatch => {
 export const fetchCategoryItems = category => dispatch => {
   dispatch(fetchItemsStart());
 
-  fetch(`http://localhost:3000/category/${category}?origin=${store.currentLocation}`)
+  fetch(
+    `http://localhost:3000/category/${category}/?origin=${
+      store.getState().location.currentLocation
+    }`
+  )
     .then(response => response.json())
     .then(data => {
       console.log('we got the category items');

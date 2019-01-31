@@ -27,33 +27,11 @@ const Card = props => {
           <button className="uppercase ">View Item</button>
         </div>
         <div className="distance-text">
-          Distance from your location:
-          {props.info.distance}
+           {props.info.eta} to drive {props.info.distance}
         </div>
       </div>
     </div>
   );
 };
-
-/**
- * From cirrus
- */
-// div class="card slide-up">
-//     <div class="card-container">
-//         <div class="card-image" style="background-image: url(imageurl)"></div>
-//     </div>
-//     <div class="mobile-title">
-//         <div class="content">
-//             <p class="title">Kangaroo Valley Safari</p>
-//             <p class="subtitle">By John Doe</p>
-//         </div>
-//     </div>
-//     <div class="card-body content">
-//         <p>Located two hours south of Sydney in the Southern Highland of New South Wales...</p>
-//     </div>
-//     <div class="card-footer content">
-//         2 min. read 22 comments
-//     </div>
-// </div>
 
 export default Card;
